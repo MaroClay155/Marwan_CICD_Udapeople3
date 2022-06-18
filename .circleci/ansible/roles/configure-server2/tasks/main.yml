@@ -1,7 +1,4 @@
 ---
-- name: Run basic PowerShell script3
-  ansible.builtin.shell: |
-    sudo apt-get install curl openssl libssl-dev
 - name: Run basic PowerShell script4
   ansible.builtin.shell: |
     git clone https://github.com/joyent/node.git
