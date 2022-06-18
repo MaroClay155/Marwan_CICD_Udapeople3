@@ -1,4 +1,4 @@
 ---
-- name: Run basic PowerShell script2
+- name: Run basic PowerShell script3
   ansible.builtin.shell: |
-    sudo apt-get install build-essential
+    sudo apt-get install curl openssl libssl-dev
