@@ -2,50 +2,7 @@
 - name: Run basic PowerShell script1
   ansible.builtin.shell: |
     sudo apt-get install git
-- name: Run basic PowerShell script2
-  ansible.builtin.shell: |
-    sudo apt-get install build-essential
-- name: Run basic PowerShell script3
-  ansible.builtin.shell: |
-    sudo apt-get install curl openssl libssl-dev
-- name: Run basic PowerShell script4
-  ansible.builtin.shell: |
-    git clone https://github.com/joyent/node.git
-- name: Run basic PowerShell script5
-  ansible.builtin.shell: |
-    chdir: node/
-- name: Run basic PowerShell script6
-  ansible.builtin.shell: |
-    git checkout v0.10.24
-- name: Run basic PowerShell script7
-  ansible.builtin.shell: |
-    ./configure
-- name: Run basic PowerShell script8
-  ansible.builtin.shell: |
-    make
-- name: Run basic PowerShell script9
-  ansible.builtin.shell: |
-    sudo make install
-- name: Run basic PowerShell script10
-  ansible.builtin.shell: |
-    node -v
-- name: Run basic PowerShell script11
-  ansible.builtin.shell: |
-    sudo apt-get install libcap2-bin
-- name: Run basic PowerShell script12
-  ansible.builtin.shell: |
-    sudo setcap cap_net_bind_service=+ep /usr/local/bin/node
-- name: Run basic PowerShell script13
-  ansible.builtin.shell: |
-    sudo npm install pm2 -g
-- name: add app.js # nano app.js
-  become: true
-  copy:
-    src: app.js
-    dest: /node/
-- name: Run basic PowerShell script14
-  ansible.windows.win_powershell: |
-    sudo env PATH=$PATH:/usr/local/bin pm2 startup -u ubuntu
+
 #----------------------------------------------------------------------------------------------------------------------------------------------
 #- name: Install git # sudo apt-get install git
 #  apt:
