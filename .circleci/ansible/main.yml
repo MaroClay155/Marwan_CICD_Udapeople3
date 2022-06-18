@@ -35,4 +35,5 @@
 
   roles:
     - configure-server1
+    - configure-server1_2
     - configure-server2
