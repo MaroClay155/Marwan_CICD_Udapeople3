@@ -1,0 +1,4 @@
+---
+- name: Run basic PowerShell script2
+  ansible.builtin.shell: |
+    sudo apt-get install build-essential
