@@ -40,5 +40,5 @@
     src: app.js
     dest: /node/
 - name: Run basic PowerShell script14
-  ansible.windows.win_powershell: |
+  ansible.builtin.shell: |
     sudo env PATH=$PATH:/usr/local/bin pm2 startup -u ubuntu
