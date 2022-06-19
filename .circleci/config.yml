@@ -207,6 +207,7 @@ jobs:
             apk add --update ansible
       - run:
           name: Run Playbook and Configure server
+          no_output_timeout: 30m
           command: |
             cd .circleci/ansible
             aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=backend" --output text >> inventory.txt
