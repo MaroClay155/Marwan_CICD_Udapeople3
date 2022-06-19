@@ -1,7 +1,7 @@
 ---
 - name: Ansible apt install curl openssl # sudo apt-get install curl openssl libssl-dev
   apt:
-    name: curl openssl libssl-dev
+    name: libssl-dev
     state: present  
 #- name: Run basic PowerShell script2
 #  ansible.builtin.shell: |
