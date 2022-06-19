@@ -34,6 +34,11 @@
   copy:
     src: app.js
     dest: /node/
+    
+ #- name: install and start app
+ #     command:  pm2 start main.js
+ #     args:
+ #       chdir: ~/backend/dist
 - name: Run basic PowerShell script14
   ansible.builtin.shell: |
     sudo env PATH=$PATH:/usr/local/bin pm2 startup -u ubuntu
