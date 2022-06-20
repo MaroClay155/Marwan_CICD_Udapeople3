@@ -47,6 +47,4 @@
 #    - TYPEORM_MIGRATIONS_DIR: "{{ lookup('env', 'TYPEORM_MIGRATIONS_DIR')}}"
 
   roles:
-    - configure-server1
-    - configure-server1_2
-    - configure-server2
+    - configure-server
