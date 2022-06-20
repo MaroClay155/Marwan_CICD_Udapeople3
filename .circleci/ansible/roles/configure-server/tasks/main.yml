@@ -4,15 +4,44 @@
     name: git
     state: present
     update_cache: yes
-- name: Make sure the packages are installed (Ubuntu) # sudo apt-get install build-essential
+- name: install build-essential # sudo apt-get install build-essential
   apt : 
     name: build-essential 
     state: present 
-- name: Run basic PowerShell script1
-  ansible.builtin.shell: |
-    sudo apt-get install git
+- name: install openssl
+    become: true
+    raw: sudo apt-get install curl openssl libssl-dev
+    changed_when: false
+- name: clone GitHub - install npm&python
+    become: true
+    raw: |
+      git clone https://github.com/joyent/node.git
+      sudo apt install python3
+      sudo apt-get install npm
+- name: cd node
+    become: true
+    raw: |
+      cd node
+      ./configure
+      make
+      sudo make install
+      sudo apt-get install libcap2-bin
+      sudo setcap cap_net_bind_service=+ep /usr/local/bin/node
+      sudo npm install pm2 -g
+- name: add app.js # nano app.js
+  become: true
+  copy:
+    src: app.js
+    dest: /node/
+- name: pm2 startup
+  become: true
+    raw: sudo env PATH=$PATH:/usr/local/bin pm2 startup -u ubuntu
+      
 
-#----------------------------------------------------------------------------------------------------------------------------------------------
+      
+
+
+  #----------------------------------------------------------------------------------------------------------------------------------------------
 #- name: Install git # sudo apt-get install git
 #  apt:
 #    name: git
