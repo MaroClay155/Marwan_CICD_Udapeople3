@@ -6,9 +6,6 @@
   ansible.builtin.shell: |
     mkdir node
     cd node
-- name: Run basic PowerShell script6
-  ansible.builtin.shell: |
-    git checkout v0.10.24
 - name: Run basic PowerShell script7
   ansible.builtin.shell: |
     ./configure
