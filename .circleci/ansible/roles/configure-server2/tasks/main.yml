@@ -4,6 +4,7 @@
     git clone https://github.com/joyent/node.git
 #- name: Run basic PowerShell script5
   ansible.builtin.shell: |
+    mkdir node
     cd node
 - name: Run basic PowerShell script6
   ansible.builtin.shell: |
