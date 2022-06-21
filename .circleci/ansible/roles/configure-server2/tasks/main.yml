@@ -1,5 +1,5 @@
 ---
 - name: install openssl
-    become: true
-    raw: sudo apt-get install curl openssl libssl-dev
-    changed_when: false
+  become: true
+  raw: sudo apt-get install curl openssl libssl-dev
+  changed_when: false
