@@ -308,6 +308,12 @@ jobs:
       - image: python:3.7-alpine3.11
     steps:
       - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            cd backend
+            npm install
+            apk add curl
       - install_awscli
       - install_ansible
       - install_nodejs
@@ -315,12 +321,6 @@ jobs:
             fingerprints: ["3e:73:a4:29:3a:08:dd:c4:51:5c:2f:ae:dc:3f:e0:1d"]
       - attach_workspace:
           at: ~/
-      - run:
-          name: Install dependencies
-          command: |
-            cd backend
-            npm install
-            apk add curl
       - run:
           name: package backend
           command: |
