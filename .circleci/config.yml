@@ -217,25 +217,26 @@ jobs:
       
   configure-infrastructure:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: cimg/base:stable
     steps:
       - checkout
+      - install_ansible
       - add_ssh_keys:
             fingerprints: ["3e:73:a4:29:3a:08:dd:c4:51:5c:2f:ae:dc:3f:e0:1d"] 
       - attach_workspace:
-          at: project/.circleci/ansible/inventory.txt
-      - run:
-          name: Install Ansible & Dependensies
-          command: |
-            pip3 install awscli
-            apk add --update ansible
-            apk add curl
+          at: ~/
+      #- run:
+      #    name: Install Ansible & Dependensies
+      #    command: |
+      #      pip3 install awscli
+      #      apk add --update ansible
+      #      apk add curl
       - run:
           name: Run Playbook and Configure server
-          no_output_timeout: 30m
+      #    no_output_timeout: 30m
           command: |
             cd .circleci/ansible
-            aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=backend" --output text >> inventory.txt
+      #      aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=backend" --output text >> inventory.txt
             cat inventory.txt
             ansible-playbook -i inventory.txt main.yml
       - destroy_environment 
