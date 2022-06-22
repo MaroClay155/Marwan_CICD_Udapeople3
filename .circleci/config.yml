@@ -308,31 +308,36 @@ jobs:
       - image: python:3.7-alpine3.11
     steps:
       - checkout
+      - install_awscli
+      - install_ansible
+      - install_nodejs
       - add_ssh_keys:
-            fingerprints: ["3e:73:a4:29:3a:08:dd:c4:51:5c:2f:ae:dc:3f:e0:1d"] 
-      - run:
-          name: Install 1
-          command: |
-            apk add --update ansible
-            pip3 install awscli
-            apk update 
-            apk upgrade
-            apk add curl
-            apk add bash
-            apk add nodejs
-            apk add tar gzip
-            apk add npm
+            fingerprints: ["3e:73:a4:29:3a:08:dd:c4:51:5c:2f:ae:dc:3f:e0:1d"]
       - attach_workspace:
-          at: project/.circleci/ansible/inventory.txt
+          at: ~/
+      - restore-cache:
+          keys: [backend-deps]
       - run:
-          name: Deploy backend
-          no_output_timeout: 30m
+          name: Install dependencies
           command: |
             cd backend
-            npm i
+            npm install
+      - run:
+          name: package backend
+          command: |
+            cd backend
             npm run build
+            tar -czf artifact.tar.gz dist/* package*
+            
             cd ..
-            tar -C backend -czvf artifact.tar.gz .
+            cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
+      - run:
+          name: deply backend
+          command: |
+            export  TYPEORM_MIGRATIONS_DIR=./migrations
+            export  TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
+            export  TYPEORM_MIGRATIONS=./migrations/*.ts
+            
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=backend" --output text >> inventory.txt
