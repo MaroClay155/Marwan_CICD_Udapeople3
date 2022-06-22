@@ -4,6 +4,7 @@ orbs:
   
 commands:
   install_awscli:
+    description: Install awscli
     steps:
       - run:
           command: |
@@ -11,16 +12,26 @@ commands:
             unzip awscliv2.zip
             sudo ./aws/install
             
+  install_nodejs:
+    description: Install node.js 13
+    steps:
+      - run:
+          command: |
+            curl -fsSl https://deb.nodesource.com/setup_13.x | sudo -E bash -
+            sudo apt install -y nodejs
+            
   install_ansible:
+    description: Install ansible
     steps:
       - run:
           command: |
             sudo apt update
-            sudo apt install software-properties-common
+            sudo apt install software-properties-common -y
             sudo add-apt-repository --yes --update ppa:ansible/ansible
-            sudo apt install ansible
+            sudo apt install ansible -y
             
   notify_on_failure:
+    description: notify_on_failure
     steps:
       - slack/notify:
           event: fail
@@ -28,17 +39,18 @@ commands:
           template: basic_fail_1
           
   destroy_environment:
-     steps:
-       - run:
-           name: Destroy environment
-           when: on_fail
-           command: |
+    description: Destroy environment
+    steps:
+      - run:
+          name: Destroy environment
+          when: on_fail
+          command: |
             aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
             aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
             aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
             aws cloudformation delete-stack --stack-name prometheus-${CIRCLE_WORKFLOW_ID:0:7}
             
-  revert-migrations:
+  revert_migrations:
     description: Revert the last migration if successfully run in the current workflow.  
     steps:
       - run:
@@ -260,44 +272,36 @@ jobs:
                 curl https://kvdb.io/${KVDB_BUCKET}/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
       - destroy_environment 
-      - revert-migrations  
+      - revert_migrations  
       - notify_on_failure
             
   deploy-frontend:
     docker:
-      - image: amazon/aws-cli
+      - image: cimg/base:stable
     steps:
       - checkout
+      - install_awscli
+      - install_nodejs
       - run:
-          name: Install dependencies
-          command: |
-             yum update -y
-             yum install -y tar gzip
-             yum install -y python3
-             curl -sL https://rpm.nodesource.com/setup_10.x |  bash -
-             yum install -y nodejs
-             pip3 install ansible
-             pip3 install awscli
-
-      - run:
-          name: Get backend url
-          command: |
-            export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=backend" --output text)
-            export API_URL="http://${BACKEND_IP}:3030"
-            echo "API_URL = ${API_URL}"
-            echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
-            cat frontend/.env
-      - run:
-          name: Deploy frontend objects
-          no_output_timeout: 30m
+          name: install dependencies
           command: |
             cd frontend
             npm install
+      - run:
+          name: Get backend url
+          command: |
+            BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=backend" --output text)
+            echo "API_URL=http://${BACKEND_IP}:3030" >> frontend/.env
+            cat frontend/.env
+      - run:
+          name: Deploy frontend objects
+          command: |
+            cd frontend
             npm run build
-            tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
+          #tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - destroy_environment 
-      - revert-migrations  
+      - revert_migrations  
       - notify_on_failure
       
   deploy-backend:
@@ -346,7 +350,7 @@ jobs:
             ansible-playbook -i prometheusinventory.txt deploy-prometheus.yml
           
       - destroy_environment 
-      - revert-migrations
+      - revert_migrations
       - notify_on_failure
 
   smoke-test:
@@ -385,7 +389,7 @@ jobs:
                 return 1
             fi
       - destroy_environment 
-      - revert-migrations
+      - revert_migrations
       - notify_on_failure
         
 
@@ -407,7 +411,7 @@ jobs:
             --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
             --tags project=udapeople
       - destroy_environment 
-      - revert-migrations
+      - revert_migrations
       - notify_on_failure
 
   cleanup:
@@ -439,6 +443,8 @@ jobs:
               aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
               aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
             fi 
+      - destroy_environment 
+      - revert_migrations
       - notify_on_failure
       
   notify_on_success:
