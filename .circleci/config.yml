@@ -305,21 +305,9 @@ jobs:
       
   deploy-backend:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: cimg/base:stable
     steps:
       - checkout
-      - run:
-          name: Install dependencies
-          command: |      
-            apk add --update ansible
-            pip3 install awscli
-            apk update 
-            apk upgrade
-            apk add curl
-            apk add bash
-            apk add nodejs
-            apk add tar gzip
-            apk add npm
       - install_awscli
       - install_ansible
       - install_nodejs
