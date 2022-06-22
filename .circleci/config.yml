@@ -310,10 +310,16 @@ jobs:
       - checkout
       - run:
           name: Install dependencies
-          command: |
-            cd backend
-            npm install
+          command: |      
+            apk add --update ansible
+            pip3 install awscli
+            apk update 
+            apk upgrade
             apk add curl
+            apk add bash
+            apk add nodejs
+            apk add tar gzip
+            apk add npm
       - install_awscli
       - install_ansible
       - install_nodejs
@@ -321,6 +327,11 @@ jobs:
             fingerprints: ["3e:73:a4:29:3a:08:dd:c4:51:5c:2f:ae:dc:3f:e0:1d"]
       - attach_workspace:
           at: ~/
+       - run:
+          name: Install dependencies
+          command: |
+            cd backend
+            npm install
       - run:
           name: package backend
           command: |
