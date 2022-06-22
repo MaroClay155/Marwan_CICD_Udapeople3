@@ -216,6 +216,7 @@ jobs:
           command: |
             pip3 install awscli
             apk add --update ansible
+            apk add curl
       - run:
           name: Run Playbook and Configure server
           no_output_timeout: 30m
