@@ -320,6 +320,7 @@ jobs:
           command: |
             cd backend
             npm install
+            apk add curl
       - run:
           name: package backend
           command: |
