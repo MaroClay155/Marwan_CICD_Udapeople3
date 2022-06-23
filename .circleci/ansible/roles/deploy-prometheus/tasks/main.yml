@@ -44,7 +44,7 @@
 - name: "add alertmanager.service"
   become: true
   copy:
-    src: prometheus.service
+    src: alertmanager.service
     dest: /etc/systemd/system/
 #------------------------------------------------------------------------------------------------------  
 - name: "enable prometheus service"
