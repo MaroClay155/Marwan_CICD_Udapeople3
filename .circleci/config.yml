@@ -360,23 +360,23 @@ jobs:
       - install_awscli
       - install_nodejs
       - run:
-          name: Backend smoke test.
+          name: Frontend smoke test.
           command: |
-            BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=backend" --output text)
-            export API_URL="http://${BACKEND_IP}:3030"
-            echo "${API_URL}"
-            if curl "${API_URL}/api/status" | grep "ok"
+            Frontend_Website_URL=http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/         
+            echo ${Frontend_Website_URL} 
+            if curl -s ${Frontend_Website_URL} | grep "Welcome"
             then
                 exit 0
             else
                 exit 1
             fi
       - run:
-          name: Frontend smoke test.
+          name: Backend smoke test.
           command: |
-            Frontend_Website_URL=http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/         
-            echo ${Frontend_Website_URL} 
-            if curl -s ${Frontend_Website_URL} | grep "Welcome"
+            BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=backend" --output text)
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "${API_URL}"
+            if curl "${API_URL}/api/status" | grep "ok"
             then
                 exit 0
             else
