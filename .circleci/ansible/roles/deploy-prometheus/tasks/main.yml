@@ -46,19 +46,18 @@
   copy:
     src: prometheus.service
     dest: /etc/systemd/system/
-#------------------------------------------------------------------------------------------------------
-- name: "enable alertmanager service"
-  become: true
-  systemd:
-    state: restarted
-    daemon_reload: yes
-    name: alertmanager
-    enabled: yes
-    
+#------------------------------------------------------------------------------------------------------  
 - name: "enable prometheus service"
   become: true
   systemd:
     state: restarted
     daemon_reload: yes
     name: prometheus
+    enabled: yes
+- name: "enable alertmanager service"
+  become: true
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: alertmanager
     enabled: yes
