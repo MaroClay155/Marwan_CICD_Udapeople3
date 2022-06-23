@@ -65,7 +65,6 @@ commands:
                npm run migration:revert
             fi
             
-
 jobs:
 
   build-frontend:
