@@ -366,7 +366,7 @@ jobs:
             echo ${Frontend_Website_URL} 
             if curl -s ${Frontend_Website_URL} | grep "Welcome"
             then
-                return 1
+                return 0
             else
                 return 1
             fi
