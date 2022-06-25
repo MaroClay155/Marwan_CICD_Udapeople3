@@ -218,7 +218,7 @@ jobs:
           command: |
             cd .circleci/ansible
             echo "Contents  of the main-inventory file is -------"
-            aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=prometheus" --output text >> inventory.txt
+            aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=backend" --output text >> inventory.txt
             cat inventory.txt
       - persist_to_workspace:
           root: ~/
