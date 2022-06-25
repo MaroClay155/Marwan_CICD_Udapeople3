@@ -429,6 +429,9 @@ jobs:
               aws cloudformation delete-stack --stack-name udapeople-backend-${Old_Workflow_ID}
               aws cloudformation delete-stack --stack-name prometheus-${Old_Workflow_ID}
             fi
+      - destroy_environment 
+      - revert_migrations  
+      - notify_on_failure
   
   notify_on_success:
     docker:
