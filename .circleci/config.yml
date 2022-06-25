@@ -320,7 +320,6 @@ jobs:
           command: |
             cd backend
             npm install
-            cd backend
             npm run build
             tar -C backend -czvf artifact.tar.gz 
             cd ..
