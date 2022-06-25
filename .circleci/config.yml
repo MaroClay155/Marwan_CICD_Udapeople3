@@ -378,9 +378,9 @@ jobs:
             else
                 exit 1
             fi
-      #- destroy_environment 
-      #- revert_migrations
-      #- notify_on_failure
+      - destroy_environment 
+      - revert_migrations
+      - notify_on_failure
 
   cloudfront-update:
     docker:
