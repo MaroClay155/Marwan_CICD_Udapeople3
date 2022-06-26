@@ -20,17 +20,13 @@ rule_files:
 # Here it's Prometheus itself.
 scrape_configs:
   # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
-  - job_name: "prometheus"
-    static_configs:
-      - targets: ["localhost:9090"]
-    # metrics_path defaults to '/metrics'
-    # scheme defaults to 'http'.
-    #export BACKEND_Public_IPv4_DNS=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicDnsName' --filters "Name=tag:monitor,Values=nodeexporter" --output text)
-    #static_configs:
-    #  - targets: ["${BACKEND_Public_IPv4_DNS}:9090"]
   - job_name: "node"
     ec2_sd_configs:
       - region: us-east-1
-        access_key: AKIATJU2EPDFLASYKS4Z
-        secret_key: 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
+        access_key: AKIAQD4X2AMHURE77FGG
+        secret_key: 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
         port: 9100
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+  
