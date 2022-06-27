@@ -6,7 +6,7 @@ Parameters:
     Type: String
 
 Resources:
-  prometheusSecurityGroup:
+  prometheusSecurityGroup1:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupName: !Sub prometheus-${ID}
@@ -29,7 +29,7 @@ Resources:
           ToPort: 9093
           CidrIp: 0.0.0.0/0
 
-  EC2Instance:
+  prometheusInstance:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: t2.micro
