@@ -12,16 +12,12 @@
     src: node_exporter.service
     dest: /etc/systemd/system/
 
-#- name: "enable node_exporter service"
-#  become: true
-#  systemd:
-#    state: restarted
-#    daemon_reload: yes
-#    name: node_exporter
-#    enabled: yes
-- name: "install node_exporter"
-  shell: |
-    sudo systemctl daemon-reload
-    sudo systemctl enable node-exporter
-    sudo systemctl start node-exporter
+- name: "enable node_exporter service"
+  become: true
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: node_exporter
+    enabled: yes
+
     
