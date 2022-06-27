@@ -423,13 +423,12 @@ jobs:
             export oldworkflowid=$(curl --insecure https://kvdb.io/${KVDB_BUCKET}/OldWorkflowID)
             echo "old workflow ID: $oldworkflowid"
             if [[ "${STACKS[@]}" != "${oldworkflowid}" ]];
-            then
-              aws s3 rm s3://udapeople-${oldworkflowid} --recursive
+            then 
               aws cloudformation delete-stack --stack-name udapeople-frontend-${oldworkflowid}
               aws cloudformation delete-stack --stack-name udapeople-backend-${oldworkflowid}
               aws cloudformation delete-stack --stack-name prometheus-${oldworkflowid}
             fi
-      - destroy_environment 
+      - destroy_environment  #aws s3 rm s3://udapeople-${oldworkflowid} --recursive
       - revert_migrations  
       - notify_on_failure
   
