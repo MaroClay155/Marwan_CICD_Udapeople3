@@ -48,18 +48,6 @@
     src: alertmanager.service
     dest: /etc/systemd/system/
 #----------------------------------------------------------------------------------------------------
-- name: "enable alertmanager service"
-  become: true
-  systemd:
-    state: restarted
-    daemon_reload: yes
-    name: alertmanager
-    enabled: yes
-- name: "install alert manager"
-  shell: |
-    sudo systemctl daemon-reload
-    sudo systemctl enable alertmanager
-    sudo systemctl start alertmanager
 - name: "enable prometheus service"
   become: true
   systemd:
@@ -67,6 +55,18 @@
     daemon_reload: yes
     name: prometheus
     enabled: yes
-- name: "install alert manager"
+- name: "enable alertmanager service"
+  become: true
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: alertmanager
+    enabled: yes
+#- name: "install alert manager"
+#  shell: |
+#    sudo systemctl daemon-reload
+#    sudo systemctl enable alertmanager
+#    sudo systemctl start alertmanager
+- name: "restart prometheus"
   shell: |
     sudo systemctl restart prometheus
