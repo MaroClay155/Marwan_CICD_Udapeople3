@@ -38,6 +38,14 @@ commands:
           channel: no-thing-just-a-test
           template: basic_fail_1
           
+  notify_on_success:
+    description: notify_on_success
+    steps:
+      - slack/notify:
+          event: pass
+          channel: no-thing-just-a-test
+          template: basic_pass_1
+          
   destroy_environment:
     description: Destroy environment
     steps:
@@ -217,6 +225,7 @@ jobs:
             - project/.circleci/ansible/inventory.txt
       - destroy_environment 
       - notify_on_failure
+      - notify_on_success
       
   configure-infrastructure:
     docker:
@@ -413,15 +422,9 @@ jobs:
       - destroy_environment  #aws s3 rm s3://udapeople-${oldworkflowid} --recursive
       - revert_migrations  
       - notify_on_failure
+      - notify_on_success
   
-  notify_on_success:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - slack/notify:
-          event: pass
-          channel: no-thing-just-a-test
-          template: success_tagged_deployment_1
+
       
       
   
@@ -457,6 +460,5 @@ workflows:
           requires: [smoke-test]
       - cleanup:
           requires: [cloudfront-update]
-      - notify_on_success:
-          requires: [cleanup]
+    
      
