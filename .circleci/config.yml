@@ -48,9 +48,9 @@ commands:
             aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
             aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
             aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
-            aws cloudformation delete-stack --stack-name prometheus-${CIRCLE_WORKFLOW_ID:0:7}
+          #aws cloudformation delete-stack --stack-name prometheus-${CIRCLE_WORKFLOW_ID:0:7}
             
-  revert_migrations:
+  revert_migrations:  #????????????????????????????????????????????????????????????????????????????????????????????????????????????????
     description: Revert the last migration if successfully run in the current workflow.  
     steps:
       - run:
@@ -187,15 +187,6 @@ jobs:
               --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
               --tags project=udapeople
-      - run:
-          name: Ensure prometheus infrastructure exists
-          no_output_timeout: 30m
-          command: |
-            aws cloudformation deploy \
-              --template-file .circleci/files/prometheus.yml \
-              --stack-name "prometheus-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
-              --tags project=prometheus
       - run:
           name: Ensure front-end infrastructure exist
           no_output_timeout: 30m
@@ -335,15 +326,6 @@ jobs:
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
-      - run:
-          name: Deploy prometheus
-          no_output_timeout: 30m
-          command: |
-            cd .circleci/ansible
-            echo "Contents  of the prometheus-inventory file is -------"
-            aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=prometheus" --output text >> prometheusinventory.txt
-            cat prometheusinventory.txt
-            ansible-playbook -i prometheusinventory.txt deploy-prometheus.yml
       - destroy_environment 
       - revert_migrations
       - notify_on_failure
@@ -427,7 +409,6 @@ jobs:
               aws s3 rm s3://udapeople-${oldworkflowid} --recursive
               aws cloudformation delete-stack --stack-name udapeople-frontend-${oldworkflowid}
               aws cloudformation delete-stack --stack-name udapeople-backend-${oldworkflowid}
-              aws cloudformation delete-stack --stack-name prometheus-${oldworkflowid}
             fi
       - destroy_environment  #aws s3 rm s3://udapeople-${oldworkflowid} --recursive
       - revert_migrations  
